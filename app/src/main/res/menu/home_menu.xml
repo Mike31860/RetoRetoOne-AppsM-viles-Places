@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/newPlace"
+        android:icon="@drawable/baseline_add_business_black_18dp"
+        android:title="Nuevo" />
+    <item
+        android:id="@+id/mapPlace"
+        android:icon="@drawable/baseline_near_me_black_18dp"
+        android:title="Mapa" />
+    <item
+        android:id="@+id/searchPlace"
+        android:icon="@drawable/baseline_menu_book_black_18dp"
+        android:title="Buscar" />
+</menu>

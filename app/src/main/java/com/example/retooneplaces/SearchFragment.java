@@ -55,7 +55,14 @@ public class SearchFragment extends Fragment {
         placesNewList.setLayoutManager(linear);
         adapter = new PlacesAdapter();
         placesNewList.setAdapter(adapter);
-        adapter.setPlaces(leerPlaces());
+        ArrayList<Place> lista=leerPlaces();
+
+        if(lista!=null){
+        adapter.setPlaces(leerPlaces());} else{
+
+            adapter.setPlaces(new ArrayList<Place>());
+
+        }
     //    observer.onListDataListener(adapter.getPlaces());
 
       //  leerPlaces();

@@ -85,6 +85,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
+
         leerPlaces();
         mMap.setMyLocationEnabled(true);
         myMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(0,0)));
@@ -167,8 +168,10 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<Place>>(){}.getType();
         ArrayList<Place> lista= gson.fromJson(jsonString, type);
-        for(int i = 0; i < lista.size(); i++) {
-            mMap.addMarker(new MarkerOptions().position(new LatLng(lista.get(i).getLatitud(),lista.get(i).getLongitud())));
+        if(lista!=null) {
+            for (int i = 0; i < lista.size(); i++) {
+                mMap.addMarker(new MarkerOptions().position(new LatLng(lista.get(i).getLatitud(), lista.get(i).getLongitud())));
+            }
         }
 
     }

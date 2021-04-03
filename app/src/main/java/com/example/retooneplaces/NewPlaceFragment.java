@@ -99,7 +99,13 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
         nameText.setOnClickListener(this);
         locationId.setOnClickListener(this);
         direccionRealId.setText(this.Direccion);
-        places = leerPlaces();
+        ArrayList<Place> lista=leerPlaces();
+        if(lista!=null){
+            places = leerPlaces();
+        }else{
+            places= new ArrayList<Place>();
+        }
+
        //  places = new ArrayList<Place>();
         gson = new Gson();
 

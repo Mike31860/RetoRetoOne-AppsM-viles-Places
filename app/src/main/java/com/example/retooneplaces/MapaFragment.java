@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -42,13 +44,17 @@ import java.util.List;
 
 public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
-
+    private static final double MIN_METERS = 100;
     private static final String LIST_KEY="list_key";
     private GoogleMap mMap;
     private onLocationDataListener observer;
     private LocationManager ubication;
     private Marker myMarker;
     private Geocoder geocoder;
+    private ArrayList<Place> places = new ArrayList<Place>();
+
+    private bottomSheetPlace bottomSheetPlace;
+
 
     public MapaFragment() {
         // Required empty public constructor
@@ -73,10 +79,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         geocoder = new Geocoder(getActivity());
         ubication =(LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-
-
-
-
         return view;
     }
 
@@ -85,6 +87,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
+
 
         leerPlaces();
         mMap.setMyLocationEnabled(true);
@@ -111,7 +114,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
             }
 
-
         });
     }
 
@@ -123,6 +125,8 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 LatLng position= new LatLng(location.getLatitude(),location.getLongitude());
                 myMarker.setPosition(position);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,16));
+
+                updateDistance();
             }
 
             @Override
@@ -151,6 +155,20 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
+    private void updateDistance(){
+
+        float[] distanceResult = new float[1];
+
+        for (Place place: places) {
+            Location.distanceBetween(myMarker.getPosition().latitude, myMarker.getPosition().longitude,
+                    place.getLatitud(), place.getLongitud(), distanceResult);
+            double distance = distanceResult[0];
+
+            if(distance<=MIN_METERS){
+                bottomSheetPlace(place);
+            }
+        }
+    }
 
     public void setObserver(onLocationDataListener obseerver) {
         this.observer = obseerver;
@@ -158,7 +176,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
     public interface onLocationDataListener {
         void OnLocationData(List<Address> algo);
-
     }
 
     public void leerPlaces(){
@@ -167,13 +184,37 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         String jsonString= pref.getString(LIST_KEY, "");
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<Place>>(){}.getType();
-        ArrayList<Place> lista= gson.fromJson(jsonString, type);
-        if(lista!=null) {
-            for (int i = 0; i < lista.size(); i++) {
-                mMap.addMarker(new MarkerOptions().position(new LatLng(lista.get(i).getLatitud(), lista.get(i).getLongitud())));
+        places= gson.fromJson(jsonString, type);
+        if(places!=null) {
+            for (int i = 0; i < places.size(); i++) {
+                mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLatitud(), places.get(i).getLongitud())));
             }
         }
 
+    }
+
+    public void bottomSheetPlace(Place place){
+
+        bottomSheetPlace = new bottomSheetPlace(getActivity(),R.style.BottomSheetTheme);
+
+        View sheetView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.bottom_sheet_layout,
+                getActivity().findViewById(R.id.bottom_sheet));
+
+        bottomSheetPlace.initialize(sheetView);
+        bottomSheetPlace.getBottomPlace().setText(place.getName());
+        bottomSheetPlace.getBottomAddress().setText(place.getAddress());
+        bottomSheetPlace.getBottomImage().setImageBitmap(place.getImagen());
+        bottomSheetPlace.getBottomRatingBar().setRating((float) place.getPuntaje());
+
+        sheetView.findViewById(R.id.bottomButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetPlace.dismiss();
+            }
+        });
+
+        bottomSheetPlace.setContentView(sheetView);
+        bottomSheetPlace.show();
     }
 
 

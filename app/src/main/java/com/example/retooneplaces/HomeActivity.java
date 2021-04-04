@@ -14,10 +14,12 @@ import android.os.Bundle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
+
     private MapaFragment mapaFragment;
-    private  NewPlaceFragment newPlaceFragment;
+    private NewPlaceFragment newPlaceFragment;
     private SearchFragment searchFragment;
     private BottomNavigationView navigator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

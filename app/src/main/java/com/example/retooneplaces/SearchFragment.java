@@ -31,9 +31,6 @@ public class SearchFragment extends Fragment {
     private PlacesAdapter adapter;
     private SharedPreferences preferences;
 
-
-
-
     public SearchFragment() {
         // Required empty public constructor
     }

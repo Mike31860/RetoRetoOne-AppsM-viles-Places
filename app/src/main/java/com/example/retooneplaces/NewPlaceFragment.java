@@ -69,8 +69,6 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
 
     public NewPlaceFragment() {
         // Required empty public constructor
-
-
     }
 
 
@@ -128,7 +126,6 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
                 String address= Direccion;
                 double punta = 0.0;
 
-
                 saveInformationPlace(new Place(id, address, PlaceName, punta, imagenBitmap, latitud, longitud));
 
                 break;
@@ -163,9 +160,6 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
                 builder.create().show();
 
                 break;
-
-
-
         }
     }
     @Override

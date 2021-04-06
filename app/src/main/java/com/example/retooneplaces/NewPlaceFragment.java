@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -37,6 +38,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +70,7 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
     private double longitud=0.0;
     private double latitud=0.0;
     private Bitmap imagenBitmap;
+    private String NameOfFolder = "/imagenes/";
 
     public NewPlaceFragment() {
         // Required empty public constructor
@@ -104,7 +109,7 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
             places= new ArrayList<Place>();
         }
 
-       //  places = new ArrayList<Place>();
+        // places = new ArrayList<Place>();
         gson = new Gson();
 
      //   imageView.setImageBitmap(this.imagenBitmap);
@@ -119,14 +124,46 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
 
         switch (v.getId()){
             case R.id.registerButton:
+                Long consecutivo=System.currentTimeMillis()/1000;
+                nameImage = consecutivo+".jpg";
+                String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + NameOfFolder;
+                Log.e(">>>>",""+file_path);
+                File dir = new File(file_path);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                 file = new File(dir, nameImage);
+                try {
 
-                String id= UUID.randomUUID().toString();
-                String PlaceName= nameText.getText().toString();
 
-                String address= Direccion;
-                double punta = 0.0;
+                    String id= UUID.randomUUID().toString();
+                    String PlaceName= nameText.getText().toString();
+                    String address= Direccion;
+                    double punta = 0.0;
 
-                saveInformationPlace(new Place(id, address, PlaceName, punta, imagenBitmap, latitud, longitud));
+
+                    if(!PlaceName.equals("")&&!address.equals("")&&imagenBitmap!=null&&imagenBitmap.getByteCount()>0){
+                        FileOutputStream fOut = new FileOutputStream(file);
+                        imagenBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+                        fOut.flush();
+                        fOut.close();
+                        imagenBitmap.recycle();
+                        saveInformationPlace(new Place(id, address, PlaceName, punta, nameImage, latitud, longitud));
+                        AbleToSave();
+                    }
+                    else{
+                        UnableToSave();
+                    }
+
+
+                }
+                catch(FileNotFoundException e) {
+                    UnableToSave();
+                }
+                catch(IOException e) {
+                    UnableToSave();
+                }
+
 
                 break;
             case R.id.imageAdd:
@@ -142,6 +179,7 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
                                 nameImage = consecutivo+".jpg";
                                 String namePhoto=consecutivo.toString()+nameImage;
                                 file = new File(getActivity().getExternalFilesDir(null)+"/"+namePhoto);
+                               // if()
                                 Log.e(">>>>",""+file);
                                 Uri uri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName(), file);
                                 i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
@@ -217,7 +255,13 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
 
         return lista;
     }
+    private void UnableToSave() {
+        Toast.makeText(getActivity(), "¡Por favor revise los campos!", Toast.LENGTH_SHORT).show();
+    }
 
+    private void AbleToSave() {
+        Toast.makeText(getActivity(), "Lugar registrado con éxito.", Toast.LENGTH_SHORT).show();
+    }
 
 
 }

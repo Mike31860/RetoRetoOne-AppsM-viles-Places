@@ -2,6 +2,9 @@ package com.example.retooneplaces;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import java.util.UUID;
 public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
 
     private ArrayList<Place> places;
+    private String NameOfFolder = "/imagenes";
 
 
     public PlacesAdapter() {
@@ -43,7 +47,9 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
             holder.getNombre().setText(places.get(position).getName());
             holder.getAddress().setText(places.get(position).getAddress());
             holder.getPuntaje().setText(places.get(position).getPuntaje()+"");
-        //    holder.getImagen().setImageBitmap(places.get(position).getImagen());
+            String photoPath = Environment.getExternalStorageDirectory()+NameOfFolder+"/"+places.get(position).getImagen();
+            Bitmap bitmap = BitmapFactory.decodeFile(photoPath);
+            holder.getImagen().setImageBitmap(bitmap);
             holder.getPuntaje().setText(places.get(position).getPuntaje()+"");
     }
 

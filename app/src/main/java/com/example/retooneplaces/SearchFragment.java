@@ -41,9 +41,6 @@ public class SearchFragment extends Fragment  {
     private SharedPreferences preferences;
     private EditText search;
 
-
-
-
     public SearchFragment() {
         // Required empty public constructor
     }

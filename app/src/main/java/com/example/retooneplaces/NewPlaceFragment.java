@@ -74,8 +74,6 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
 
     public NewPlaceFragment() {
         // Required empty public constructor
-
-
     }
 
 
@@ -167,7 +165,6 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
                 }
 
 
-
                 break;
             case R.id.imageAdd:
 
@@ -201,9 +198,6 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
                 builder.create().show();
 
                 break;
-
-
-
         }
     }
     @Override

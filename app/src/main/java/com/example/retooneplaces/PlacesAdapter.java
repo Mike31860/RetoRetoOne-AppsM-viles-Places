@@ -19,7 +19,7 @@ import java.util.UUID;
 public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
 
     private ArrayList<Place> places;
-    private String NameOfFolder = "/imagenes";
+    public static final String NameOfFolder = "/imagenes";
 
 
     public PlacesAdapter() {

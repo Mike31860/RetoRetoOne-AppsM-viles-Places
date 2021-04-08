@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -17,11 +19,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -158,7 +162,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     private void updateDistance(){
 
         float[] distanceResult = new float[1];
-
         for (Place place: places) {
             Location.distanceBetween(myMarker.getPosition().latitude, myMarker.getPosition().longitude,
                     place.getLatitud(), place.getLongitud(), distanceResult);
@@ -167,6 +170,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             if(distance<=MIN_METERS){
                 bottomSheetPlace(place);
             }
+
         }
     }
 
@@ -193,6 +197,27 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    public void update( String id, double puntaje){
+
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean equals = false;
+        int i = 0;
+        for (; !equals ; i++) {
+            if(places.get(i).getId().equals(id)){
+                places.get(i).setPuntaje(puntaje);
+                equals= true;
+            }
+        }
+
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(places);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(LIST_KEY,jsonString);
+        editor.apply();
+
+    }
+
     public void bottomSheetPlace(Place place){
 
         bottomSheetPlace = new bottomSheetPlace(getActivity(),R.style.BottomSheetTheme);
@@ -203,12 +228,19 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         bottomSheetPlace.initialize(sheetView);
         bottomSheetPlace.getBottomPlace().setText(place.getName());
         bottomSheetPlace.getBottomAddress().setText(place.getAddress());
-        bottomSheetPlace.getBottomImage().setImageBitmap(place.getImagen());
+
+        String photoPath = Environment.getExternalStorageDirectory()+PlacesAdapter.NameOfFolder+"/"+place.getImagen();
+        Bitmap bitmap = BitmapFactory.decodeFile(photoPath);
+        bottomSheetPlace.getBottomImage().setImageBitmap(bitmap);
+        
         bottomSheetPlace.getBottomRatingBar().setRating((float) place.getPuntaje());
+
 
         sheetView.findViewById(R.id.bottomButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                RatingBar rb = sheetView.findViewById(R.id.bottomRatingBar);
+                update(place.getId(),rb.getRating());
                 bottomSheetPlace.dismiss();
             }
         });

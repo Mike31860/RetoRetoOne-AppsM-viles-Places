@@ -56,7 +56,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     private Marker myMarker;
     private Geocoder geocoder;
     private ArrayList<Place> places = new ArrayList<Place>();
-
     private bottomSheetPlace bottomSheetPlace;
 
 
@@ -91,9 +90,10 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
-
-
         leerPlaces();
+        if(places==null){
+            places = new ArrayList<Place>();
+        }
         mMap.setMyLocationEnabled(true);
         myMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(0,0)));
         getLocation();
@@ -166,7 +166,13 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             Location.distanceBetween(myMarker.getPosition().latitude, myMarker.getPosition().longitude,
                     place.getLatitud(), place.getLongitud(), distanceResult);
             double distance = distanceResult[0];
-
+            place.setDistanciaPoint((int) distance);
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            Gson gson = new Gson();
+            String jsonString = gson.toJson(places);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString(LIST_KEY,jsonString);
+            editor.apply();
             if(distance<=MIN_METERS){
                 bottomSheetPlace(place);
             }
@@ -181,6 +187,8 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     public interface onLocationDataListener {
         void OnLocationData(List<Address> algo);
     }
+
+
 
     public void leerPlaces(){
 
@@ -217,6 +225,8 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         editor.apply();
 
     }
+
+
 
     public void bottomSheetPlace(Place place){
 

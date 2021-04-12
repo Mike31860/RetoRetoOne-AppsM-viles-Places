@@ -148,7 +148,8 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
                         fOut.flush();
                         fOut.close();
                         imagenBitmap.recycle();
-                        saveInformationPlace(new Place(id, address, PlaceName, punta, nameImage, latitud, longitud));
+                        double distance=0.0;
+                        saveInformationPlace(new Place(id, address, PlaceName, punta, nameImage, latitud, longitud,distance));
                         AbleToSave();
                     }
                     else{

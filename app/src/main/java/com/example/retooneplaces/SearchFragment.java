@@ -6,8 +6,10 @@ import android.location.Address;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.material.slider.Slider;
@@ -31,7 +34,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
-public class SearchFragment extends Fragment  {
+public class SearchFragment extends Fragment {
 
     private static final String LIST_KEY="list_key";
 
@@ -40,6 +43,8 @@ public class SearchFragment extends Fragment  {
     private PlacesAdapter adapter;
     private SharedPreferences preferences;
     private EditText search;
+
+
 
     public SearchFragment() {
         // Required empty public constructor
@@ -63,6 +68,8 @@ public class SearchFragment extends Fragment  {
         adapter = new PlacesAdapter();
         placesNewList.setAdapter(adapter);
         search = root.findViewById(R.id.search);
+
+
 
         search.addTextChangedListener(new TextWatcher() {
 
@@ -102,11 +109,7 @@ public class SearchFragment extends Fragment  {
             adapter.setPlaces(new ArrayList<Place>());
 
         }
-    //    observer.onListDataListener(adapter.getPlaces());
 
-      //  leerPlaces();
-
-     //   placesNewList.set
         return root;
     }
 
@@ -123,12 +126,4 @@ public class SearchFragment extends Fragment  {
 
 
 
-//    public void setObserver(SearchFragment.onListDataListener obseerver) {
-//        this.observer = obseerver;
-//    }
-
-    public interface onListDataListener{
-        void onListDataListener(ArrayList<Place> place);
-
-    }
 }

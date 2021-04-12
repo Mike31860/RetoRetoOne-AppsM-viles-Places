@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
@@ -47,6 +49,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
             holder.getNombre().setText(places.get(position).getName());
             holder.getAddress().setText(places.get(position).getAddress());
             holder.getPuntaje().setText(places.get(position).getPuntaje()+"");
+            holder.getDistance().setText(places.get(position).getDistanciaPoint()+"");
             String photoPath = Environment.getExternalStorageDirectory()+NameOfFolder+"/"+places.get(position).getImagen();
             Bitmap bitmap = BitmapFactory.decodeFile(photoPath);
             holder.getImagen().setImageBitmap(bitmap);
@@ -65,4 +68,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
     public void setPlaces(ArrayList<Place> places) {
         this.places = places;
     }
+
+
+
 }

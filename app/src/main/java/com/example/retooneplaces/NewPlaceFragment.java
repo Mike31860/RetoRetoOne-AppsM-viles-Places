@@ -18,6 +18,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -71,6 +73,7 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
     private double latitud=0.0;
     private Bitmap imagenBitmap;
     private String NameOfFolder = "/imagenes/";
+    private MapaFragment mapaFragment;
 
     public NewPlaceFragment() {
         // Required empty public constructor
@@ -199,6 +202,12 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
                 builder.create().show();
 
                 break;
+
+
+            case R.id.locationId:
+                ShowFragments();
+
+                break;
         }
     }
     @Override
@@ -264,5 +273,16 @@ public class NewPlaceFragment extends Fragment implements View.OnClickListener, 
         Toast.makeText(getActivity(), "Lugar registrado con éxito.", Toast.LENGTH_SHORT).show();
     }
 
+    public void ShowFragments(){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, mapaFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
 
+    }
+
+
+    public void setMapaFragment(MapaFragment mapaFragment) {
+        this.mapaFragment = mapaFragment;
+    }
 }

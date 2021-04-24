@@ -51,10 +51,14 @@ public class HomeActivity extends AppCompatActivity {
             mapaFragment = MapaFragment.newInstance();
             newPlaceFragment = NewPlaceFragment.newInstance();
             searchFragment = SearchFragment.newInstance();
-
-            ShowFragments(newPlaceFragment);
             mapaFragment.setObserver(newPlaceFragment);
+            newPlaceFragment.setMapaFragment(mapaFragment);
+            searchFragment.setMapaFragment(mapaFragment);
+            ShowFragments(newPlaceFragment);
+
+
           //  searchFragment.setObserver(newPlaceFragment);
+
 
 
             navigator.setOnNavigationItemSelectedListener(
@@ -82,5 +86,9 @@ public class HomeActivity extends AppCompatActivity {
             );
 
         }
+    }
+
+    public MapaFragment getMapaFragment() {
+        return mapaFragment;
     }
 }

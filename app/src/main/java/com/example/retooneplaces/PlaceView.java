@@ -22,6 +22,7 @@ public class PlaceView extends RecyclerView.ViewHolder  implements View.OnClickL
     private ImageButton viewButton;
     private MapaFragment mapaFragment;
     private TextView distance;
+    private FragmentManager fragmentManager;
 
     public PlaceView(ConstraintLayout root) {
         super(root);
@@ -88,20 +89,28 @@ public class PlaceView extends RecyclerView.ViewHolder  implements View.OnClickL
     @Override
     public void onClick(View v) {
 
-//        switch (v.getId()){
-//            case R.id.viewButton:
-//                    ShowFragments(mapaFragment);
-//                break;
-//
-//        }
+        switch (v.getId()){
+            case R.id.viewButton:
+                    ShowFragments();
+                break;
+
+        }
 
     }
-//    public void ShowFragments(Fragment fragment){
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction transaction = fragmentManager.beginTransaction();
-//        transaction.replace(R.id.fragmentContainer, fragment);
-//        transaction.commit();
-//    }
+    public void ShowFragments(){
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragmentContainer, mapaFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+    }
 
 
+    public void setMapaFragment(MapaFragment mapaFragment) {
+        this.mapaFragment = mapaFragment;
+    }
+
+    public void setFragmentManager(FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
+    }
 }

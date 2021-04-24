@@ -10,15 +10,18 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -43,6 +46,8 @@ public class SearchFragment extends Fragment {
     private PlacesAdapter adapter;
     private SharedPreferences preferences;
     private EditText search;
+    private MapaFragment mapaFragment;
+
 
 
 
@@ -67,34 +72,35 @@ public class SearchFragment extends Fragment {
         placesNewList.setLayoutManager(linear);
         adapter = new PlacesAdapter();
         placesNewList.setAdapter(adapter);
+        adapter.setMapaFragment(mapaFragment);
+        adapter.setFragmentManager(getFragmentManager());
         search = root.findViewById(R.id.search);
-
-
-
         search.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void afterTextChanged(Editable s) {
                 if(!search.getText().toString().equals("")){
-                    ArrayList<Place> placesArray = adapter.getPlaces();
-                    List<Place> lista = placesArray.stream().filter(i -> i.getName().toLowerCase().contains(
-                            search.getText().toString())).collect(Collectors.toList());
-                    adapter.setPlaces((ArrayList) lista);}
+                    ArrayList<Place> placesArray = leerPlaces();
+                    ArrayList<Place> lugares = new ArrayList<>();
+                    for (int i=0; i<placesArray.size(); i++){
+                        if(placesArray.get(i).getName().toLowerCase().contains(search.getText().toString().toLowerCase())){
+                            lugares.add(placesArray.get(i));
+                        }
+                    }
+                    adapter.setPlaces(lugares);
+                }
                 else{
                     adapter.setPlaces(leerPlaces());
                 }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
 
 
             }
@@ -124,6 +130,7 @@ public class SearchFragment extends Fragment {
         return lista;
     }
 
-
-
+    public void setMapaFragment(MapaFragment mapaFragment) {
+        this.mapaFragment = mapaFragment;
+    }
 }

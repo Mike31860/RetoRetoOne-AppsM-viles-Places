@@ -57,6 +57,8 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     private Geocoder geocoder;
     private ArrayList<Place> places = new ArrayList<Place>();
     private bottomSheetPlace bottomSheetPlace;
+    private Marker currentMarker;
+
 
 
     public MapaFragment() {
@@ -102,13 +104,23 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             public void onMapClick(LatLng latLng) {
 
                 MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions = new MarkerOptions();
                 markerOptions.position(latLng);
                 markerOptions.title(latLng.latitude + " " + latLng.longitude);
 
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                         latLng, 16
                 ));
-                mMap.addMarker(markerOptions);
+
+                if (currentMarker!=null) {
+                    currentMarker.remove();
+                    currentMarker=null;
+                }
+
+                if (currentMarker==null) {
+                    currentMarker = mMap.addMarker(markerOptions);
+                }
+
                 try {
                     List<Address> address= geocoder.getFromLocation(latLng.latitude,  latLng.longitude, 1);
                     observer.OnLocationData( address );
